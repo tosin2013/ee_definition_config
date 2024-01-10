@@ -94,7 +94,7 @@
     controller_templates:
       - name: Execution Environment Builder
         job_type: run
-        inventory: Controller Hosts
+        inventory: Remote Build Servers
         credentials:
           - Execution Build Credentials
         project: EE build project
