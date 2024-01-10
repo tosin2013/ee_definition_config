@@ -1,6 +1,6 @@
 ---
 - name: Playbook to create custom EE
-  hosts: 147.75.51.15
+  hosts: controller
   gather_facts: false
   vars:
     # For controller configuration definition
