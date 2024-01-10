@@ -3,11 +3,25 @@ Use the EE builder using configuration Job in Controller
 
 [Blog post discussing how to use this repo](https://www.redhat.com/architect/ansible-execution-environment-automated-build)
 
+## Requirements install collections
+```bash
+ ansible-galaxy collection install  -r collections/requirements.yml 
+ ```
+
+
 ## Files and purposes
 
 ### Configure Controller
 Configure controller to create all controller objects to create a Job template that can create an EE. 
 Changes will need to made to credentials and the inventory to be applicable to your installation.
+```bash
+ansible-playbook  configure_controller.yaml  -e "@secret-vars.yml"  -vvv
+```
+
+#### No Survey
+```bash
+ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-vars.yml"  -vvv
+```
 
 ### EE Builder Survey
 The playbook used in the controller Job template to create an EE.

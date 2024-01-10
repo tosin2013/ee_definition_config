@@ -4,15 +4,15 @@
   connection: local
   gather_facts: false
   vars:
-    controller_hostname: https://controller
-    controller_username: admin
-    controller_password: secret123
-    controller_validate_certs: false
+    controller_hostname: "{{ controller_hostname_var }}"
+    controller_username: "{{ controller_username_var }}"
+    controller_password: "{{ controller_password_var }}"
+    controller_validate_certs: "{{ controller_validate_certs_var }}"
     controller_configuration_credentials_secure_logging: false
     controller_projects:
       - name: EE build project
         scm_type: git
-        scm_url: https://github.com/sean-m-sullivan/ee_definition_config.git
+        scm_url: https://github.com/tosin2013/ee_definition_config.git
         scm_branch: main
         scm_update_on_launch: true
         description: EE build project
@@ -23,12 +23,11 @@
       - name: Controller Hosts
         organization: Default
     controller_hosts:
-      - name: controller
+      - name: localhost
         inventory: Controller Hosts
         variables:
-          ansible_connection: ssh
-          ansible_ssh_user: root
-          ansible_ssh_pass: password
+          ansible_connection: local
+          ansible_python_interpreter: '{{ ansible_playbook_python }}'
     controller_credential_types:
       - name: Registery Credentials
         description: REST API Credential
@@ -70,26 +69,20 @@
             ee_registry_username: !unsafe "{{ ee_registry_username }}"
             ee_registry_password: !unsafe "{{ ee_registry_password }}"
             ee_validate_certs: !unsafe "{{ ee_validate_certs }}"
-            ah_host: !unsafe "{{ ah_host }}"
-            ah_token: !unsafe "{{ ah_token }}"
+            ah_host: !unsafe "{{ ee_ah_host }}"
+            ah_token: !unsafe "{{ ee_ah_token }}"
     controller_credentials:
       - credential_type: Registery Credentials
         name: Execution Build Credentials
         organization: Default
         inputs:
-          base_registery_username: rhn-username
-          base_registery_password: !vault |
-                    $ANSIBLE_VAULT;1.1;AES256
-                    38343138643736376337626664646137363764393037396162643730346234663035646562646338
-                    6531323731363538353063383661326334626234363834660a623463396433653034343934336466
-                    32363431646462313966323633343837656666643935353561323663616266323962643435303034
-                    6239363439666330350a653062306361363966336236363332326265653366386334316533323763
-                    3238
-          ee_registry_username: admin
-          ee_registry_password: secret123
-          ee_validate_certs: false
-          ah_host: hub.nas
-          ah_token: a1a0c799ddbd37c2ea6cc41173f1e9a2b11cb343
+          base_registery_username:  "{{ base_registery_username_var }}"
+          base_registery_password:  "{{ base_registery_password_var }}"
+          ee_registry_username: "{{ ee_registry_username_var }}"
+          ee_registry_password: "{{ ee_registry_password_var }}"
+          ee_validate_certs: "{{ ee_validate_certs_var }}"
+          ee_ah_host: "{{ ah_host_var }}"
+          ee_ah_token: "{{ ah_token_var }}"
     controller_templates:
       - name: Execution Environment Builder
         job_type: run
@@ -100,7 +93,7 @@
         playbook: ee_builder_survey.yaml
         verbosity: 1
         extra_vars:
-          ee_registry_dest: ahnosso.node
+          ee_registry_dest: "{{ ee_registry_dest_var }}"
         survey_enabled: true
         survey_spec:
           name: Execution builder survey
