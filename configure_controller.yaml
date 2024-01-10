@@ -22,12 +22,20 @@
     controller_inventories:
       - name: Controller Hosts
         organization: Default
+      - name: Remote Build Servers
+        organization: Default
     controller_hosts:
       - name: localhost
         inventory: Controller Hosts
         variables:
           ansible_connection: local
           ansible_python_interpreter: '{{ ansible_playbook_python }}'
+      - name: "{{ remote_builder_hostname_var }}"
+        inventory: Remote Build Servers
+        variables:
+          ansible_connection: ssh
+          ansible_ssh_user: "{{ remote_builder_username_var }}"
+          ansible_ssh_pass: "{{ remote_builder_password_var }}"
     controller_credential_types:
       - name: Registery Credentials
         description: REST API Credential
