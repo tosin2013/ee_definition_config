@@ -27,5 +27,5 @@
         prepend: "{{ survey_prepend.split('\n') }}"
         append: "{{ survey_append.split('\n') }}"
   roles:
-    - redhat_cop.ee_utilities.ee_builder
+    - infra.ee_utilities.ee_builder
 ...
