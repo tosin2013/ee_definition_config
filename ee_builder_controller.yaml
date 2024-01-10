@@ -1,6 +1,6 @@
 ---
 - name: Playbook to create custom EE
-  hosts: localhost
+  hosts: controller
   gather_facts: false
   vars:
     # For controller configuration definition
