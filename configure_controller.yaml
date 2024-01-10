@@ -12,7 +12,7 @@
     controller_projects:
       - name: EE build project
         scm_type: git
-        scm_url: https://github.com/tosin2013/ee_definition_config.git
+        scm_url: "{{ ee_builder_project_url_var }}"
         scm_branch: main
         scm_update_on_launch: true
         description: EE build project
@@ -27,11 +27,13 @@
     controller_hosts:
       - name: localhost
         inventory: Controller Hosts
+        enabled: true
         variables:
           ansible_connection: local
           ansible_python_interpreter: '{{ ansible_playbook_python }}'
       - name: "{{ remote_builder_hostname_var }}"
         inventory: Remote Build Servers
+        enabled: true
         variables:
           ansible_connection: ssh
           ansible_ssh_user: "{{ remote_builder_username_var }}"
@@ -119,7 +121,7 @@
               required: false
               type: text
               variable: survey_base_image
-              default: registry.redhat.io/ansible-automation-platform-22/ee-minimal-rhel8:latest
+              default: "{{ default_base_image_var }}"
               min: 0
               max: 1034
             - question_name: List of bindep requirements
