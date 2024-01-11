@@ -23,6 +23,12 @@ ansible-playbook  configure_controller.yaml  -e "@secret-vars.yml"  -vvv
 ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-vars.yml"  -vvv
 ```
 
+### Load Execution Environment
+```bash
+ansible-playbook  configure_controller.yaml  -e "@secret-vars.yml"  -vvv
+```
+
+
 ### EE Builder Survey
 The playbook used in the controller Job template to create an EE.
 
