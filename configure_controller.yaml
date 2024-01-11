@@ -162,11 +162,10 @@
       - name: Test Generated Image Template
         job_type: run
         inventory: Controller Hosts
-        credentials:
-          - Execution Build Credentials
         project: EE build project
         playbook: test_image_playbook.yaml  # Name of your test playbook
         verbosity: 1
+        execution_environment: Custom EE  # Specify the execution environment here
         survey_enabled: true
         survey_spec:
           name: Enter Name for Hello statement
@@ -181,12 +180,12 @@
               max: 256
             # Add more survey questions as needed
         extra_vars:
-          username: "{{ username }}"  # Example of how to use extra_vars
+          username: "{{ username_var }}"  # Example of how to use extra_vars
   roles:
-    - redhat_cop.controller_configuration.credential_types
-    - redhat_cop.controller_configuration.credentials
-    - redhat_cop.controller_configuration.inventories
-    - redhat_cop.controller_configuration.hosts
-    - redhat_cop.controller_configuration.projects
-    - redhat_cop.controller_configuration.job_templates
+    - infra.controller_configuration.credential_types
+    - infra.controller_configuration.credentials
+    - infra.controller_configuration.inventories
+    - infra.controller_configuration.hosts
+    - infra.controller_configuration.projects
+    - infra.controller_configuration.job_templates
 ...

@@ -1,6 +1,6 @@
 ---
 - name: Test Generated Image Against Controller Image
-  hosts: Controller Hosts
+  hosts: localhost
   vars:
     username: "default_user"  # Default value for username
 
