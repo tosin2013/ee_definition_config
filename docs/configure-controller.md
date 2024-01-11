@@ -1,4 +1,5 @@
 # Ansible Automation Platform Configuration
+![20240111111008](https://i.imgur.com/Pr2r1F5.png)
 
 ## Overview
 - [configure_controller.yaml](../configure_controller.yaml) playbook is used to configure Ansible Automation Platform by using the Ansible controller configuration modules. It will create inventories, projects, credentials, hosts, and job templates.
@@ -45,3 +46,6 @@
 11. Roles used to configure Automation Platform objects using controller configuration modules
 
 The playbook automates setup of infrastructure on Ansible Automation Platform to implement CI/CD pipelines for building and testing execution environments. Surveys allow customization of the jobs when launched. Extra variables pass data at run time.
+
+# Screen Shots of after running Execution Environment Builder job template:
+![20240111111126](https://i.imgur.com/RV3OfLT.png)

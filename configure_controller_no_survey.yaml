@@ -4,39 +4,43 @@
   connection: local
   gather_facts: false
   vars:
-    controller_hostname: https://controller.nas/
-    controller_username: admin
-    controller_password: secret123
-    controller_validate_certs: false
+    controller_hostname: "{{ controller_hostname_var }}"
+    controller_username: "{{ controller_username_var }}"
+    controller_password: "{{ controller_password_var }}"
+    controller_validate_certs: "{{ controller_validate_certs_var }}"
+    controller_configuration_credentials_secure_logging: false
     controller_configuration_async_delay: 3
     controller_projects:
       - name: EE build project
         scm_type: git
-        scm_url: https://github.com/sean-m-sullivan/ee_definition_config.git
+        scm_url:  "{{ ee_builder_project_url_var }}"
         scm_branch: main
-        scm_update_on_launch: false
+        scm_update_on_launch: true
         description: EE build project
         organization: Default
         wait: true
-        update: false
+        update: true
     controller_inventories:
-      - name: AAP Hosts
+      - name: Controller Hosts
         organization: Default
-      - name: Blank (localhost only)
+      - name: Remote Build Servers
         organization: Default
     controller_hosts:
-      - name: 10.242.42.108
-        inventory: AAP Hosts
-        variables:
-          ansible_connection: ssh
-          ansible_ssh_user: awx
-          ansible_ssh_pass: password
       - name: localhost
-        inventory: Blank (localhost only)
+        inventory: Controller Hosts
+        enabled: true
         variables:
           ansible_connection: local
+          ansible_python_interpreter: '{{ ansible_playbook_python }}'
+      - name: "{{ remote_builder_hostname_var }}"
+        inventory: Remote Build Servers
+        enabled: true
+        variables:
+          ansible_connection: ssh
+          ansible_ssh_user: "{{ remote_builder_username_var }}"
+          ansible_ssh_pass: "{{ remote_builder_password_var }}"
     controller_credential_types:
-      - name: Registry Credentials
+      - name: Registery Credentials
         description: REST API Credential
         kind: cloud
         inputs:
@@ -55,10 +59,10 @@
               type: string
               label: AH Registery Password
               secret: true
-            - id: ah_host
+            - id: ee_ah_host
               type: string
               label: AH Hostname
-            - id: ah_token
+            - id: ee_ah_token
               type: string
               label: AH Token
               secret: true
@@ -76,53 +80,47 @@
             ee_registry_username: !unsafe "{{ ee_registry_username }}"
             ee_registry_password: !unsafe "{{ ee_registry_password }}"
             ee_validate_certs: !unsafe "{{ ee_validate_certs }}"
-            ah_host: !unsafe "{{ ah_host }}"
-            ah_token: !unsafe "{{ ah_token }}"
+            ah_host: !unsafe "{{ ee_ah_host }}"
+            ah_token: !unsafe "{{ ee_ah_token }}"
     controller_credentials:
-      - credential_type: Registry Credentials
+      - credential_type: Registery Credentials
         name: Execution Build Credentials
         organization: Default
         inputs:
-          base_registery_username: rhn-username
-          base_registery_password: !vault |
-                    $ANSIBLE_VAULT;1.1;AES256
-                    38343138643736376337626664646137363764393037396162643730346234663035646562646338
-                    6531323731363538353063383661326334626234363834660a623463396433653034343934336466
-                    32363431646462313966323633343837656666643935353561323663616266323962643435303034
-                    6239363439666330350a653062306361363966336236363332326265653366386334316533323763
-                    3238
-          ee_registry_username: admin
-          ee_registry_password: secret123
-          ee_validate_certs: false
-          ah_host: hub.nas
-          ah_token: 98d2f2b53c2fc9d8df66ab2d04917037e613f379
+          base_registery_username:  "{{ base_registery_username_var }}"
+          base_registery_password:  "{{ base_registery_password_var }}"
+          ee_registry_username: "{{ ee_registry_username_var }}"
+          ee_registry_password: "{{ ee_registry_password_var }}"
+          ee_validate_certs: "{{ ee_validate_certs_var }}"
+          ee_ah_host: "{{ ah_host_var }}"
+          ee_ah_token: "{{ ah_token_var }}"
       - credential_type: Red Hat Ansible Automation Platform
         name: Controller Credential
         organization: Default
         inputs:
-          host: 10.242.42.150
-          username: admin
-          password: secret123
-          verify_ssl: false
+          host: "{{ controller_hostname_var}}"
+          username: "{{ controller_username_var }}"
+          password: "{{ controller_password_var }}"
+          verify_ssl: "{{ controller_validate_certs_var }}"
     controller_templates:
       - name: Execution Environment Builder
         job_type: run
-        inventory: AAP Hosts
+        inventory: Controller Hosts
         credentials:
           - Execution Build Credentials
         project: EE build project
-        execution_environment: Automation Hub Minimal execution environment
+        execution_environment: Minimal execution environment
         playbook: ee_builder_controller.yaml
         extra_vars:
-          ee_registry_dest: hub.nas
+          ee_registry_dest: "{{ ee_registry_dest_var }}"
           ee_builder_dir_clean: true
       - name: Push Execution Environments to Controller
         job_type: run
-        inventory: Blank (localhost only)
+        inventory: Controller Hosts
         credentials:
           - Controller Credential
         project: EE build project
-        execution_environment: Automation Hub Minimal execution environment
+        execution_environment: Minimal execution environment
         playbook: push_to_controller.yaml
     controller_workflows:
       - name: Update Execution Environments
@@ -142,6 +140,28 @@
               type: job_template
               organization:
                 name: Default
+      - name: Test Generated Image Template
+        job_type: run
+        inventory: Controller Hosts
+        project: EE build project
+        playbook: test_image_playbook.yaml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: Custom EE  # Specify the execution environment here
+        survey_enabled: true
+        survey_spec:
+          name: Enter Name for Hello statement
+          description: This is a test survey
+          spec:
+            - question_name: Name
+              question_description: Enter your name
+              required: true
+              type: text
+              variable: username
+              min: 0
+              max: 256
+            # Add more survey questions as needed
+        extra_vars:
+          username: "{{ username_var }}"  # Example of how to use extra_vars
   roles:
     - infra.controller_configuration.credential_types
     - infra.controller_configuration.credentials
