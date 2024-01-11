@@ -22,7 +22,7 @@
           galaxy:
             collections:
               - name: awx.awx
-                version: 22.6.0
+                version: 23.5.0
               - name: infra.controller_configuration
               - name: infra.ah_configuration
         build_steps:
