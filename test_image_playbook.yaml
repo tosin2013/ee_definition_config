@@ -1,0 +1,21 @@
+---
+- name: Test Generated Image Against Controller Image
+  hosts: Controller Hosts
+  vars:
+    username: "default_user"  # Default value for username
+
+  tasks:
+    - name: Greet User
+      debug:
+        msg: "Hello {{ username }}"
+
+    - name: List directory contents and get OS version
+      shell: |
+        ls -l
+        echo "OS Version:"
+        cat /etc/os-release
+      register: cmd_output
+
+    - name: Display command output
+      debug:
+        msg: "{{ cmd_output.stdout_lines }}"

@@ -159,6 +159,29 @@
               variable: survey_append
               min: 0
               max: 5000
+      - name: Test Generated Image Template
+        job_type: run
+        inventory: Controller Hosts
+        credentials:
+          - Execution Build Credentials
+        project: EE build project
+        playbook: test_image_playbook.yaml  # Name of your test playbook
+        verbosity: 1
+        survey_enabled: true
+        survey_spec:
+          name: Enter Name for Hello statement
+          description: This is a test survey
+          spec:
+            - question_name: Name
+              question_description: Enter your name
+              required: true
+              type: text
+              variable: username
+              min: 0
+              max: 256
+            # Add more survey questions as needed
+        extra_vars:
+          username: "{{ username }}"  # Example of how to use extra_vars
   roles:
     - redhat_cop.controller_configuration.credential_types
     - redhat_cop.controller_configuration.credentials
