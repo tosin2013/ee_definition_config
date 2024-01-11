@@ -1,10 +1,21 @@
 ---
-- name: Playbook to create custom EE
+- name: Playbook to create custom Execution Environment
   hosts: localhost
   gather_facts: false
+  vars:
+    controller_hostname: "{{ controller_hostname_var }}"
+    controller_username: "{{ controller_username_var }}"
+    controller_password: "{{ controller_password_var }}"
+    controller_verify_ssl: "{{ controller_verify_ssl_var | default(omit) }}"
+    ee_registry_dest_var: "quay.io/takinosh/ee_definition_config:latest"  # Target image
 
   tasks:
     - name: Add Execution Environment
       ansible.builtin.include_role:
         name: infra.controller_configuration.execution_environments
-...
+      vars:
+        controller_execution_environments:
+          - name: Custom EE
+            image: "{{ ee_registry_dest_var }}"
+            organization: Default  # Specify the organization name if needed
+            # Additional parameters can be added as needed
