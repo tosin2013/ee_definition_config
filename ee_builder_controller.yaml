@@ -21,8 +21,8 @@
             - awxkit  # For import and export modules
           galaxy:
             collections:
-              - name: awx.awx
-                version: 23.5.0
+              #- name: awx.awx
+              #  version: 23.5.0
               - name: infra.controller_configuration
               - name: infra.ah_configuration
         build_steps:
