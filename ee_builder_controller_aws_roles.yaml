@@ -1,5 +1,4 @@
----
-- name: Playbook to create custom EE
+- name: Playbook to create custom EE For AWS Roles
   hosts: all
   gather_facts: false
   vars:
@@ -31,6 +30,12 @@
             - RUN cat /etc/os-release
           append_final:
             - RUN echo This is a post-install command!
-  roles:
-    - infra.ee_utilities.ee_builder
-...
+  tasks:
+    - name: Install boto3 using pip3
+      pip:
+        name: boto3
+        state: present
+
+    - name: Install Ansible Galaxy collection (amazon.aws)
+      ansible.builtin.command:
+        cmd: ansible-galaxy collection install amazon.aws
