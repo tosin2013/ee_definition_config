@@ -18,24 +18,20 @@
             - pytz  # for schedule_rrule lookup plugin
             - python-dateutil>=2.7.0  # schedule_rrule
             - awxkit  # For import and export modules
+            - boto3
           galaxy:
             collections:
               - name: awx.awx
                 version: 23.5.0
               - name: infra.controller_configuration
               - name: infra.ah_configuration
+              - name: amazon.aws
         build_steps:
           prepend_final:
             - RUN whoami
             - RUN cat /etc/os-release
           append_final:
+            - RUN whoami
             - RUN echo This is a post-install command!
-  tasks:
-    - name: Install boto3 using pip3
-      pip:
-        name: boto3
-        state: present
-
-    - name: Install Ansible Galaxy collection (amazon.aws)
-      ansible.builtin.command:
-        cmd: ansible-galaxy collection install amazon.aws
+  roles:
+    - infra.ee_utilities.ee_builder
