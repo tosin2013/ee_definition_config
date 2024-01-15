@@ -7,7 +7,7 @@
     ee_reg_credential: Automation Hub Container Registry
     ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
     ee_list:
-      - name: custom_ee
+      - name: ansible-aws-roles
         alt_name: Custom EE
         tag: 1-11-21-2
         # base_image
@@ -34,3 +34,4 @@
   roles:
     - infra.ee_utilities.ee_builder
 ...
+
