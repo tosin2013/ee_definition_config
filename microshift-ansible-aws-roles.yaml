@@ -48,31 +48,6 @@
           ansible_ssh_user: "{{ remote_builder_username_var }}"
           ansible_ssh_pass: "{{ remote_builder_password_var }}"
     controller_credential_types:
-      - name: AWS Credentials  # New credential kind for AWS
-        description: AWS Access and Secret Key Credential
-        kind: cloud
-        inputs:  # Providing it as an array, even with a single input field
-          fields:
-            - id: aws_access_key_id
-              type: string
-              label: AWS Access Key ID
-              secret: true
-            - id: aws_secret_access_key
-              type: string
-              label: AWS Secret Access Key
-              secret: true
-            - id: aws_default_region
-              type: string
-              label: AWS Default Region
-        required:
-          - aws_access_key_id
-          - aws_secret_access_key
-          - aws_default_region
-        injectors:
-          extra_vars:
-            aws_access_key_id: !unsafe "{{ aws_access_key_id }}"
-            aws_secret_access_key: !unsafe "{{ aws_secret_access_key }}"
-            aws_default_region: !unsafe "{{ aws_default_region }}"
       - name: Registery Credentials
         description: REST API Credential
         kind: cloud
@@ -127,13 +102,13 @@
           ee_validate_certs: "{{ ee_validate_certs_var }}"
           ee_ah_host: "{{ ah_host_var }}"
           ee_ah_token: "{{ ah_token_var }}"
-      - credential_type: AWS Credentials  # Use the new credential kind
-        name: AWS Execution Build Credentials
+      - credential_type:  Amazon Web Services
+        name: Amazon Web Services
+        description: AWS Execution Build Credentials
         organization: Default
         inputs:
-          aws_access_key_id: "{{ aws_access_key_id }}"
-          aws_secret_access_key: "{{ aws_secret_access_key }}"
-          aws_default_region: "{{ aws_default_region }}"
+          password: "{{ aws_secret_access_key }}"
+          username: "{{ aws_access_key_id }}"
     controller_templates:
       - name: Execution Environment Builder
         job_type: run
@@ -157,16 +132,16 @@
           ee_registry_dest: "{{ ee_registry_dest_var }}"
       - name: Deploy AWS VPC and Subnets
         job_type: run
+        job_tags: create-vpc
         inventory: Controller Hosts
-        execution_environment: Minimal execution environment
         credentials:
-          - AWS Execution Build Credentials
+          - Amazon Web Services
         project: Ansible Roles for AWS Infrastructure Creation
-        playbook: aws.yaml  # Name of your test playbook
+        playbook: aws.yml  # Name of your test playbook
         verbosity: 1
         execution_environment: Custom EE  # Specify the execution environment here
         extra_vars:
-          VPC_NAME: test  # Name of the VPC
+          VPC_NAME: microshift  # Name of the VPC
           VPC_REGION: us-east-2  # Region where the VPC will be created (Ohio)
           VPC_CIDR: "172.25.0.0/16"  # CIDR block for the VPC
           VPC_CLASS_DEFAULT: "172.25"  # Default class for IP addresses within the VPC
@@ -196,6 +171,120 @@
             - cidr: "{{ private_cidr_2 }}"  # CIDR block for Private Subnet-2
               az: "{{ private_az_2 }}"  # Availability Zone for Private Subnet-2
               resource_tags: { "Name":"{{ vpc_name }}-{{ private_az_2 }}-private-subnet-2", "Type":"Private", "Alias":"Private_Subnet_2" }  # Resource tags for Private Subnet-2
+      - name: Create AWS Security Groups
+        job_type: run
+        job_tags: create-ec2sg
+        inventory: Controller Hosts
+        credentials:
+          - Amazon Web Services
+        project: Ansible Roles for AWS Infrastructure Creation
+        playbook: aws.yml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: Custom EE  # Specify the execution environment here
+        survey_enabled: true
+        survey_spec:
+          name: VPC ID
+          description: VPC ID
+          spec:
+            - question_name: what is the target vpc ID
+              question_description: Name of target VPC ID
+              required: true
+              type: text
+              variable: VPC_ID
+              min: 17
+              max: 30
+        extra_vars:
+          EC2_SECURITY_GROUPS:
+            - name: "{{ vpc_name }}-sg"
+              description: "This sg is just a test sg"
+              rules:
+                - proto: tcp
+                  from_port: 22
+                  to_port: 22
+                  cidr_ip: 0.0.0.0/0
+          ec2_security_groups: "{{ EC2_SECURITY_GROUPS }}"
+          vpc_region: "{{ VPC_REGION }}"
+      - name: Create AWS ec2-keypair
+        job_type: run
+        job_tags: create-ec2key
+        inventory: Controller Hosts
+        credentials:
+          - Amazon Web Services
+        project: Ansible Roles for AWS Infrastructure Creation
+        playbook: aws.yml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: Custom EE  # Specify the execution environment here
+        survey_enabled: true
+        survey_spec:
+          name: VPC ID
+          description: VPC ID
+          spec:
+            - question_name: what is the target vpc ID
+              question_description: Name of target VPC ID
+              required: true
+              type: text
+              variable: VPC_ID
+              min: 17
+              max: 30
+        extra_vars:
+          VPC_REGION: "{{ VPC_REGION }}"
+          EC2_KEY_NAME: "github-actions"
+          ec2_key_name: "{{ EC2_KEY_NAME }}"
+          aap_user_ssh_key: "{{ aap_user_pub_ssh_key }}"
+          use_github_username: false
+          use_local_ssh_key: false
+          use_aap_user_ssh_key: true  # Flag to indicate whether to use AAP user SSH key
+      - name: Create Deploy AWS EC2 Instances
+        job_type: run
+        job_tags: create-ec2instance
+        inventory: Controller Hosts
+        credentials:
+          - Amazon Web Services
+        project: Ansible Roles for AWS Infrastructure Creation
+        playbook: aws.yml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: Custom EE  # Specify the execution environment here
+        survey_enabled: true
+        survey_spec:
+          name: Deploy microshift EC2 Instance
+          description: Deploy microshift EC2 Instances
+          spec:
+            - question_name: What is the target vpc ID
+              question_description: Name of target VPC ID
+              required: true
+              type: text
+              variable: VPC_ID
+              min: 17
+              max: 30          
+            - question_name: Enter AMI Owner ID 
+              question_description: Name of AMI Owner ID 
+              required: true
+              type: text
+              variable: AMI_OWNER
+              min: 0
+              max: 30          
+            - question_name: Enter SUBNET ID
+              question_description: Name of SUBNET ID
+              required: true
+              type: text
+              variable: EC2_PUBLIC_SUBNET_ID
+              min: 0
+              max: 30   
+        extra_vars:
+          ENVIRONMENT: dev
+          VPC_REGION: "{{ VPC_REGION }}"
+          SERVER_ROLE: microshift
+          EC2_KEY_NAME: "{{ EC2_KEY_NAME }}"
+          EC2_INSTANCE_TYPE: t2.xlarge
+          EC2_SECURITY_GROUP_NAME:  "{{ vpc_name }}-sg"
+          EC2_COUNT: 1
+          EC2_VOLUME_SIZE: 120
+          AMI_NAME: "RHEL-9.3.0_HVM-20231101-x86_64-5-Hourly2-GP2"
+          deploy_public_ec2_instance: True
+          #EC2_PRIVATE_SUBNET_ID:
+          #  - "CHANGEME"
+          #  -  "CHANGEME"
+          inventory_name: "[microshift]"
   roles:
     - infra.controller_configuration.credential_types
     - infra.controller_configuration.credentials
