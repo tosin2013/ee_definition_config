@@ -33,6 +33,7 @@
             - boto3
           galaxy:
             collections:
+              - name: infra.osbuild
               - name: https://github.com/redhat-cop/edge.microshift.git
                 type: git
                 version: main
