@@ -34,6 +34,7 @@
           galaxy:
             collections:
               - fedora.linux_system_roles
+              - containers.podman
               - community.general
               - ansible.posix
               - infra.osbuild
