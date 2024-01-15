@@ -110,7 +110,17 @@
           password: "{{ aws_secret_access_key }}"
           username: "{{ aws_access_key_id }}"
     controller_templates:
-      - name: Execution Environment Builder
+      - name: Microshft Execution Environment Builder
+        job_type: run
+        inventory: Remote Build Servers
+        credentials:
+          - Execution Build Credentials
+        project: EE build project
+        playbook: ee_builder_edge_microshift.yaml
+        verbosity: 1
+        extra_vars:
+          ee_registry_dest: "{{ ee_registry_dest_var }}"
+      - name: AWS Execution Environment Builder
         job_type: run
         inventory: Remote Build Servers
         credentials:

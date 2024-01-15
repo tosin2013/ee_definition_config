@@ -1,14 +1,25 @@
----
-- name: Playbook to create custom EE
+- name: Playbook to create MicroShift Build ENV For AWS Roles
   hosts: all
   gather_facts: false
+  pre_tasks:
+    - name: Template out collection requirements
+      ansible.builtin.template:
+        src: requirements.yaml.j2
+        dest: "{{ playbook_dir }}/__requirements.yaml"
+      delegate_to: localhost
+
+    - name: Eat the requirements file.
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/__requirements.yaml"
+        name: __reqs
+      delegate_to: localhost
   vars:
     # For controller configuration definition
     ee_reg_credential: Automation Hub Container Registry
     ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
     ee_list:
-      - name: custom_ee
-        alt_name: Custom EE
+      - name: edge.microshift
+        alt_name: 
         tag: latest
         # base_image
         dependencies:
@@ -19,12 +30,10 @@
             - pytz  # for schedule_rrule lookup plugin
             - python-dateutil>=2.7.0  # schedule_rrule
             - awxkit  # For import and export modules
+            - boto3
           galaxy:
             collections:
-              - name: awx.awx
-                version: 23.5.0
-              - name: infra.controller_configuration
-              - name: infra.ah_configuration
+              - name: edge.microshift
         build_steps:
           prepend_final:
             - RUN whoami
@@ -33,4 +42,6 @@
             - RUN echo This is a post-install command!
   roles:
     - infra.ee_utilities.ee_builder
-...
+
+
+    
