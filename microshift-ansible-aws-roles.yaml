@@ -28,6 +28,15 @@
         organization: Default
         wait: true
         update: true
+      - name: Microshift management and automation Collection
+        scm_type: git
+        scm_url: "{{ microshift_project_url_var }}"
+        scm_branch: main
+        scm_update_on_launch: true
+        description: Microshift management and automation Collection
+        organization: Default
+        wait: true
+        update: true
     controller_inventories:
       - name: Controller Hosts
         organization: Default
