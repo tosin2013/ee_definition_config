@@ -22,7 +22,6 @@
           galaxy:
             collections:
               - name: awx.awx
-                version: 23.5.0
               - name: infra.controller_configuration
               - name: infra.ah_configuration
               - name: amazon.aws
@@ -35,3 +34,6 @@
             - RUN echo This is a post-install command!
   roles:
     - infra.ee_utilities.ee_builder
+
+
+    
