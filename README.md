@@ -18,6 +18,11 @@ Changes will need to made to credentials and the inventory to be applicable to y
 ansible-playbook  configure_controller.yaml  -e "@secret-vars.yml"  -vvv
 ```
 
+### Configure Controller for Microshift Deployments on AWS
+```bash
+ansible-playbook  microshift-ansible-aws-roles.yaml  -e "@secret-vars-microshift-ansible-aws-roles.yml" -e "@projects/ansible-aws-roles/microshift-ansible-aws-vars.yaml"  -vvv
+```
+
 #### No Survey
 ```bash
 ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-vars.yml"  -vvv
