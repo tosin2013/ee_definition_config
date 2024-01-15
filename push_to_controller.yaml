@@ -7,7 +7,7 @@
     controller_username: "{{ controller_username_var }}"
     controller_password: "{{ controller_password_var }}"
     controller_verify_ssl: "{{ controller_verify_ssl_var | default(omit) }}"
-    ee_registry_dest_var: "quay.io/takinosh/ee_definition_config:latest"  # Target image
+    ee_registry_dest_var: "{{ ee_registry_dest_var }}:latest"  # Target image
 
   tasks:
     - name: Add Execution Environment
