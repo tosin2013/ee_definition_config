@@ -33,11 +33,9 @@
             - boto3
           galaxy:
             collections:
-              - name: edge.microshift
+              - name: https://github.com/redhat-cop/edge.microshift.git
                 type: git
-                source:
-                  name: redhat-cop/edge.microshift
-                  version: main
+                version: main
         build_steps:
           prepend_final:
             - RUN whoami
