@@ -33,10 +33,10 @@
             - boto3
           galaxy:
             collections:
-              - name: infra.osbuild
-              - name: https://github.com/redhat-cop/edge.microshift.git
-                type: git
-                version: main
+              - community.general
+              - ansible.posix
+              - infra.osbuild
+              - git+https://github.com/redhat-cop/edge.microshift.git
         build_steps:
           prepend_final:
             - RUN whoami
