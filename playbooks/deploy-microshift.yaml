@@ -1,7 +1,7 @@
 ---
 - name: Run Microshift rpm install role
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: Check if system is registered
       command: subscription-manager identity
