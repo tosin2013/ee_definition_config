@@ -55,10 +55,15 @@
     - name: Create openshift-pull-secret file
       copy:
         content: "{{ openshift_pull_secret }}"
-        dest: "{{ ansible_env.HOME }}/pull-secret.txt"
+        dest: "/home/ec2-user/pull-secret.txt"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: "0600"
+
+     - name: exit is pull-secret.txt is not present in the home directory
+       ansible.builtin.fail:
+         msg: "pull-secret.txt is not present in the home directory"
+       when: not ansible.builtin.stat(path="/home/ec2-user/pull-secret.txt").exists
 
     - name: Debug Installing rpm version 
       debug:
