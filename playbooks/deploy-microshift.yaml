@@ -53,6 +53,12 @@
         content: "{{ openshift_pull_secret }}"
         dest: "$HOME/pull-secret.txt"
 
+    - name: Debug Installing rpm version 
+      debug:
+        msg: "Installing rpm version {{ rpm_install_version }}"
+
     - name: Install Microshift on rpm based system
       ansible.builtin.import_role:
         name: edge.microshift.rpm_install
+      vars:
+        rpm_install_version: "{{ rpm_install_version }}"
