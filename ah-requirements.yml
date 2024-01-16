@@ -1,0 +1,19 @@
+"""
+This code is used for Ansible automation with the Ansible Automation Hub. 
+
+Note: Make sure to provide the required input parameters and configure the Ansible Automation Hub according to your specific needs.
+"""
+# Ansible HUB requirements.yaml
+
+collections:
+  - name: awx.awx
+    version: 23.5.0
+  - name: infra.controller_configuration
+  - name: infra.ah_configuration
+  - name: amazon.aws
+  - name: fedora.linux_system_roles
+  - name: containers.podman
+  - name: community.general
+  - name: ansible.posix
+  - name: infra.osbuild
+
