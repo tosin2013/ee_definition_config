@@ -38,6 +38,14 @@
               - community.general
               - ansible.posix
               - infra.osbuild
+              - requests-oauthlib
+              - jsonpatch
+              - pynetbox
+              - ansible-modules-hashivault
+              - deepdiff
+              - pandas
+              - ovf
+              - cryptography
               - kubernetes.core
               - git+https://github.com/tosin2013/edge.microshift.git
         build_steps:

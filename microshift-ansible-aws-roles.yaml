@@ -376,6 +376,17 @@
               required: true
               type: multiplechoice
               variable: rpm_install_version
+      - name: Display Microshift Status
+        job_type: run
+        inventory: Microshift Instances
+        credentials:
+          - microshift-machines
+        project: Microshift Application Deployment
+        playbook: playbooks/oc_get_all.yaml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: edge.microshift  # Specify the execution environment here
+        extra_vars:
+          kubeconfig_path: "/var/lib/microshift/resources/kubeadmin/kubeconfig"
   roles:
     - infra.controller_configuration.credential_types
     - infra.controller_configuration.credentials
