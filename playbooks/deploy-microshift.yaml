@@ -1,6 +1,6 @@
 ---
 - name: Run Microshift rpm install role
-  hosts: localhost
+  hosts: all
   gather_facts: false
   tasks:
     - name: Check if system is registered
