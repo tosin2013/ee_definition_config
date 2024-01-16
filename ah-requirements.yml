@@ -16,12 +16,4 @@ collections:
   - name: ansible.posix
   - name: infra.osbuild
   - name: kubernetes.core
-  - name: requests-oauthlib
-  - name: jsonpatch
-  - name: pynetbox
-  - name: ansible-modules-hashivault
-  - name: deepdiff
-  - name: pandas
-  - name: ovf
-  - name: cryptography
 
