@@ -17,7 +17,7 @@
     # For controller configuration definition
     ee_reg_credential: Automation Hub Container Registry
     #ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
-    ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8:latest"
+    ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8:latest
     ee_list:
       - name: edge.microshift
         alt_name: 
