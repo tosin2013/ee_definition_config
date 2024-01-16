@@ -60,5 +60,6 @@
     - name: Install Microshift on rpm based system
       ansible.builtin.import_role:
         name: edge.microshift.rpm_install
+      become: true
       vars:
         rpm_install_version: "{{ rpm_install_version }}"
