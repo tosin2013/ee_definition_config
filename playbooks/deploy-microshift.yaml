@@ -55,14 +55,14 @@
     - name: Create openshift-pull-secret file
       copy:
         content: "{{ openshift_pull_secret }}"
-        dest: "/home/ec2-user/pull-secret.txt"
+        dest: "{{ rpm_install_pull_secret }}"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: "0600"
 
     - name: Check if pull-secret.txt is present in the home directory
       stat:
-        path: "/home/ec2-user/pull-secret.txt"
+        path: "{{ rpm_install_pull_secret }}"
       register: pull_secret_file
 
     - name: Exit if pull-secret.txt is not present in the home directory
