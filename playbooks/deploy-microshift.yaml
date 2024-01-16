@@ -6,6 +6,7 @@
     - name: Check if system is registered
       command: subscription-manager identity
       register: subscription_status
+      become: true
       changed_when: false
       failed_when: false
       ignore_errors: true
@@ -15,6 +16,7 @@
         state: present
         username: "{{ rhel_username  }}"
         password: "{{ rhel_password  }}"
+      become: true
       when: subscription_status.rc != 0
 
     - name: Auto-attach subscription
