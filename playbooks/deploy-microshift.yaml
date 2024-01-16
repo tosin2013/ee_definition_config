@@ -51,7 +51,7 @@
     - name: Create openshift-pull-secret file
       copy:
         content: "{{ openshift_pull_secret }}"
-        dest: "$HOME/openshift-pull-secret"
+        dest: "$HOME/pull-secret.txt"
 
     - name: Install Microshift on rpm based system
       ansible.builtin.import_role:
