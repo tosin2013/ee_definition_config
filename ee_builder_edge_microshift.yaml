@@ -38,6 +38,7 @@
               - community.general
               - ansible.posix
               - infra.osbuild
+              - kubernetes.core
               - git+https://github.com/tosin2013/edge.microshift.git
         build_steps:
           prepend_final:

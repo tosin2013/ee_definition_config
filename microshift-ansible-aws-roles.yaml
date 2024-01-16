@@ -37,6 +37,15 @@
         organization: Default
         wait: true
         update: true
+      - name: Microshift Application Deployment
+        scm_type: git
+        scm_url: "{{ app_project_url_var }}"
+        scm_branch: aap
+        scm_update_on_launch: true
+        description: Microshift Application Deployment Repo
+        organization: Default
+        wait: true
+        update: true
     controller_inventories:
       - name: Controller Hosts
         organization: Default
@@ -120,6 +129,15 @@
         inputs:
           password: "{{ aws_secret_access_key }}"
           username: "{{ aws_access_key_id }}"
+      - credential_type: Machine
+        name: microshift-machines
+        description: Microshift SSH Credentials
+        organization: Default
+        inputs:
+          become_method: sudo
+          become_username: root
+          ssh_key_data: '{{ microshift_ssh_private_key_var }}'
+          username: "{{ microshift_username_var }}"
     controller_templates:
       - name: Microshft Execution Environment Builder
         job_type: run
@@ -130,7 +148,7 @@
         playbook: ee_builder_edge_microshift.yaml
         verbosity: 1
         extra_vars:
-          ee_registry_dest: "{{ ee_registry_dest_var }}"
+          ee_registry_dest: "{{ ee_registry_dest_var }}/edge.microshift"
           edge_microshift_tag: "{{ edge_microshift_tag }}"
       - name: AWS Execution Environment Builder
         job_type: run
@@ -141,7 +159,7 @@
         playbook: ee_builder_controller_aws_roles.yaml
         verbosity: 1
         extra_vars:
-          ee_registry_dest: "{{ ee_registry_dest_var }}"
+          ee_registry_dest: "{{ ee_registry_dest_var }}/ansible-aws-roles"
           ansible_aws_roles_tag: "{{ ansible_aws_roles_tag }}"
       - name: Push Execution Environments to Controller
         job_type: run
@@ -162,7 +180,7 @@
         project: Ansible Roles for AWS Infrastructure Creation
         playbook: aws.yml  # Name of your test playbook
         verbosity: 1
-        execution_environment: Custom EE  # Specify the execution environment here
+        execution_environment: ansible-aws-roles # Specify the execution environment here
         extra_vars:
           VPC_NAME: microshift  # Name of the VPC
           VPC_REGION: us-east-2  # Region where the VPC will be created (Ohio)
@@ -203,7 +221,7 @@
         project: Ansible Roles for AWS Infrastructure Creation
         playbook: aws.yml  # Name of your test playbook
         verbosity: 1
-        execution_environment: Custom EE  # Specify the execution environment here
+        execution_environment: ansible-aws-roles  # Specify the execution environment here
         survey_enabled: true
         survey_spec:
           name: VPC ID
@@ -240,7 +258,7 @@
         project: Ansible Roles for AWS Infrastructure Creation
         playbook: aws.yml  # Name of your test playbook
         verbosity: 1
-        execution_environment: Custom EE  # Specify the execution environment here
+        execution_environment: ansible-aws-roles # Specify the execution environment here
         survey_enabled: true
         survey_spec:
           name: VPC ID
@@ -270,7 +288,7 @@
         project: Ansible Roles for AWS Infrastructure Creation
         playbook: aws.yml  # Name of your test playbook
         verbosity: 1
-        execution_environment: Custom EE  # Specify the execution environment here
+        execution_environment: ansible-aws-roles  # Specify the execution environment here
         survey_enabled: true
         survey_spec:
           name: Deploy microshift EC2 Instance
@@ -312,6 +330,52 @@
           #  - "CHANGEME"
           #  -  "CHANGEME"
           inventory_name: "[microshift]"
+      - name: Microshift RPM Install
+        job_type: run
+        inventory: Microshift Instances
+        credentials:
+          - Amazon Web Services
+        project: Ansible Roles for AWS Infrastructure Creation
+        playbook: aws.yml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: ansible-aws-roles  # Specify the execution environment here
+        survey_enabled: true
+        survey_spec:
+          name: Configure Microshift EC2 Instance
+          description: Configure microshift EC2 Instances
+          spec:
+            - question_name: RHEL USERNAME
+              question_description: ''
+              default: username@redhat.com
+              max: 30
+              min: 0
+              required: true
+              type: text
+              variable: rhel_username
+            - question_name: ENTER RHEL PASSWORD
+              question_description: ''
+              max: 30
+              min: 0
+              required: true
+              type: password
+              variable: rhel_password
+            - question_name: Openshift Pull Secret
+              question_description: ''  
+              max: 4096
+              min: 0
+              required: true
+              type: textarea
+              variable: rpm_install_pull_secret
+            - question_name: Select Microshift Version
+              question_description: ''
+              choices:
+                - '4.14'
+                - '4.13'
+              max: 1024
+              min: 0
+              required: true
+              type: multiplechoice
+              variable: rpm_install_version
   roles:
     - infra.controller_configuration.credential_types
     - infra.controller_configuration.credentials

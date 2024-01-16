@@ -32,6 +32,12 @@ ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-v
 ```bash
 ansible-playbook  push_to_controller.yaml  -e "@secret-vars.yml"  -vvv
 ```
+### Load Execution Environment for Microshift Deployments on AWS
+```bash
+export USERNAME=takinosh
+export TAG=testing
+ansible-playbook push_to_controller.yaml -e "ee_name_var=ansible-aws-roles" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/ansible-aws-roles:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
+```
 
 
 ### EE Builder Survey
