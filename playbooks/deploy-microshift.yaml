@@ -48,9 +48,17 @@
           - tmux
           - ncurses-devel
           - curl
+          - firewalld
         state: present
       become: true
       tags: install_packages
+
+    - name: Start and Enable firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+      become: true
 
     - name: Create openshift-pull-secret file
       copy:
