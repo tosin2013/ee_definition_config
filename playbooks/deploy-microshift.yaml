@@ -60,24 +60,6 @@
         enabled: true
       become: true
 
-    - name: Create openshift-pull-secret file
-      copy:
-        content: "{{ openshift_pull_secret }}"
-        dest: "{{ rpm_install_pull_secret }}"
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-        mode: "0600"
-
-    - name: Check if pull-secret.txt is present in the home directory
-      stat:
-        path: "{{ rpm_install_pull_secret }}"
-      register: pull_secret_file
-
-    - name: Exit if pull-secret.txt is not present in the home directory
-      fail:
-        msg: "pull-secret.txt is not present in the home directory"
-      when: not pull_secret_file.stat.exists
-
     - name: Debug Installing rpm version 
       debug:
         msg: "Installing rpm version {{ rpm_install_version }}"
