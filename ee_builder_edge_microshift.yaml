@@ -30,7 +30,6 @@
             - pytz  # for schedule_rrule lookup plugin
             - python-dateutil>=2.7.0  # schedule_rrule
             - awxkit  # For import and export modules
-            - boto3
             - requests-oauthlib
             - jsonpatch
             - pynetbox==5.3.1
