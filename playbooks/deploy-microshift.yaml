@@ -13,8 +13,8 @@
     - name: Login and register system
       redhat_subscription:
         state: present
-        username: <username>
-        password: <password>
+        username: "{{ rhel_username  }}"
+        password: "{{ rhel_password  }}"
       when: subscription_status.rc != 0
 
     - name: Auto-attach subscription
