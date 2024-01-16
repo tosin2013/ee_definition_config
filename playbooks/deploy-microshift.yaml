@@ -24,7 +24,7 @@
       become: true
 
 
-    - name: Auto Attah subscription
+    - name: Auto Attach subscription
       command: sudo subscription-manager attach --auto
       become: true
       
@@ -55,7 +55,10 @@
     - name: Create openshift-pull-secret file
       copy:
         content: "{{ openshift_pull_secret }}"
-        dest: "$HOME/pull-secret.txt"
+        dest: "{{ ansible_env.HOME }}/pull-secret.txt"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0600"
 
     - name: Debug Installing rpm version 
       debug:
