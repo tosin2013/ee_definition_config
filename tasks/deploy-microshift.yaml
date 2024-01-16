@@ -22,6 +22,10 @@
         state: auto-attach
       when: subscription_status.rc != 0
 
+    - name: Enable sudo subscription-manager config
+      command: sudo subscription-manager config --rhsm.manage_repos=1
+      become: true
+      
     - name: Install required packages
       become: true
       package:
@@ -44,7 +48,12 @@
           - curl
         state: present
       tags: install_packages
-    
+
+    - name: Create openshift-pull-secret file
+      copy:
+        content: "{{ openshift_pull_secret }}"
+        dest: "$HOME/openshift-pull-secret"
+
     - name: Install Microshift on rpm based system
       ansible.builtin.import_role:
         name: edge.microshift.rpm_install
