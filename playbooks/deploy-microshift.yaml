@@ -22,6 +22,11 @@
     - name: Enable sudo subscription-manager config
       command: sudo subscription-manager config --rhsm.manage_repos=1
       become: true
+
+
+    - name: Auto Attah subscription
+      command: sudo subscription-manager attach --auto
+      become: true
       
     - name: Install required packages
       become: true
