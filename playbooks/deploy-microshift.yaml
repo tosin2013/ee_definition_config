@@ -15,6 +15,7 @@
         state: present
         username: "{{ rhel_username  }}"
         password: "{{ rhel_password  }}"
+      become: true
       when: subscription_status.rc != 0
 
     - name: Auto-attach subscription
