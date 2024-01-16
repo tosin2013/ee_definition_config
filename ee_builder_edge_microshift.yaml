@@ -20,7 +20,7 @@
     ee_list:
       - name: edge.microshift
         alt_name: 
-        tag: latest
+        tag: "{{ edge_microshift_tag }}"
         # base_image
         dependencies:
           system:

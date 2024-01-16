@@ -5,8 +5,8 @@ Use the EE builder using configuration Job in Controller
 
 ## Requirements install collections
 ```bash
- ansible-galaxy collection install  -r collections/requirements.yml 
- ```
+ansible-galaxy collection install  -r collections/requirements.yml 
+```
 
 
 ## Files and purposes

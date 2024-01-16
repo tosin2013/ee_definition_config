@@ -20,7 +20,7 @@
     ee_list:
       - name: ansible-aws-roles
         alt_name: Custom EE
-        tag: 1-11-21-2
+        tag: "{{ ansible_aws_roles_tag }}"
         # base_image
         dependencies:
           system:

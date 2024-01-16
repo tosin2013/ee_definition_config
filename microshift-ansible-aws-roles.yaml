@@ -42,6 +42,8 @@
         organization: Default
       - name: Remote Build Servers
         organization: Default
+      - name: Microshift Instances
+        organization: Default
     controller_hosts:
       - name: localhost
         inventory: Controller Hosts
