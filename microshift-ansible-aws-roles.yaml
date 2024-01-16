@@ -215,11 +215,15 @@
         extra_vars:
           EC2_SECURITY_GROUPS:
             - name: "{{ vpc_name }}-sg"
-              description: "This sg is just a test sg"
+              description: "microshift security group"
               rules:
                 - proto: tcp
                   from_port: 22
                   to_port: 22
+                  cidr_ip: 0.0.0.0/0
+                - proto: tcp
+                  from_port: 6443
+                  to_port: 6443
                   cidr_ip: 0.0.0.0/0
           ec2_security_groups: "{{ EC2_SECURITY_GROUPS }}"
           vpc_region: "{{ VPC_REGION }}"
