@@ -131,6 +131,7 @@
         verbosity: 1
         extra_vars:
           ee_registry_dest: "{{ ee_registry_dest_var }}"
+          edge_microshift_tag: "{{ edge_microshift_tag }}"
       - name: AWS Execution Environment Builder
         job_type: run
         inventory: Remote Build Servers
@@ -141,6 +142,7 @@
         verbosity: 1
         extra_vars:
           ee_registry_dest: "{{ ee_registry_dest_var }}"
+          ansible_aws_roles_tag: "{{ ansible_aws_roles_tag }}"
       - name: Push Execution Environments to Controller
         job_type: run
         inventory: Controller Hosts
