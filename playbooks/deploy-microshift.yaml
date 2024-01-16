@@ -60,10 +60,10 @@
         group: "{{ ansible_user }}"
         mode: "0600"
 
-     - name: exit is pull-secret.txt is not present in the home directory
-       ansible.builtin.fail:
-         msg: "pull-secret.txt is not present in the home directory"
-       when: not ansible.builtin.stat(path="/home/ec2-user/pull-secret.txt").exists
+    - name: exit is pull-secret.txt is not present in the home directory
+      ansible.builtin.fail:
+        msg: "pull-secret.txt is not present in the home directory"
+      when: not ansible.builtin.stat(path="/home/ec2-user/pull-secret.txt").exists
 
     - name: Debug Installing rpm version 
       debug:
