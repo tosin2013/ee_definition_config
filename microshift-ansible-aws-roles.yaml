@@ -334,11 +334,11 @@
         job_type: run
         inventory: Microshift Instances
         credentials:
-          - Amazon Web Services
-        project: Ansible Roles for AWS Infrastructure Creation
-        playbook: aws.yml  # Name of your test playbook
+          - microshift-machines
+        project: EE build project
+        playbook: playbooks/deploy-microshift.yaml
         verbosity: 1
-        execution_environment: ansible-aws-roles  # Specify the execution environment here
+        execution_environment: edge.microshift
         survey_enabled: true
         survey_spec:
           name: Configure Microshift EC2 Instance
