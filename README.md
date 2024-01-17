@@ -11,6 +11,17 @@ ansible-galaxy collection install  -r collections/requirements.yml
 
 ## Files and purposes
 
+### Load Execution Environment
+```bash
+ansible-playbook  push_to_controller.yaml  -e "@secret-vars.yml"  -vvv
+```
+### Load Execution Environment for Ansible AWS Role
+```bash
+export USERNAME=takinosh
+export TAG=latest
+ansible-playbook push_to_controller.yaml -e "ee_name_var=ansible-aws-roles" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/ansible-aws-roles:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
+```
+
 ### Configure Controller
 Configure controller to create all controller objects to create a Job template that can create an EE. 
 Changes will need to made to credentials and the inventory to be applicable to your installation.
@@ -28,15 +39,11 @@ ansible-playbook  microshift-ansible-aws-roles.yaml  -e "@secret-vars-microshift
 ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-vars.yml"  -vvv
 ```
 
-### Load Execution Environment
-```bash
-ansible-playbook  push_to_controller.yaml  -e "@secret-vars.yml"  -vvv
-```
-### Load Execution Environment for Microshift Deployments on AWS
+## Load Execution Environment for edge.microshft collection
 ```bash
 export USERNAME=takinosh
-export TAG=testing
-ansible-playbook push_to_controller.yaml -e "ee_name_var=ansible-aws-roles" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/ansible-aws-roles:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
+export TAG=latest
+ansible-playbook push_to_controller.yaml -e "ee_name_var=edge.microshift" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/edge.microshift:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
 ```
 
 
