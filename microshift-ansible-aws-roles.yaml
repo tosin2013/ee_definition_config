@@ -427,7 +427,7 @@
         credentials:
           - microshift-machines
         project: Microshift Application Deployment
-        playbook: playbooks/oc_get_all.yaml  # Name of your test playbook
+        playbook: playbooks/destroy-app.yaml  # Name of your test playbook
         verbosity: 1
         execution_environment: edge.microshift  # Specify the execution environment here
         extra_vars:
