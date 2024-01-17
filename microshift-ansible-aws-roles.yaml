@@ -387,6 +387,74 @@
         execution_environment: edge.microshift  # Specify the execution environment here
         extra_vars:
           kubeconfig_path: "/var/lib/microshift/resources/kubeadmin/kubeconfig"
+      - name: Deploy Application
+        job_type: run
+        inventory: Microshift Instances
+        credentials:
+          - microshift-machines
+        project: Microshift Application Deployment
+        playbook: playbooks/deploy-app.yaml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: edge.microshift  # Specify the execution environment here
+        extra_vars:
+          kubeconfig_path: "/var/lib/microshift/resources/kubeadmin/kubeconfig" #"/home/adminlocal/kubeconfig-orin"
+          output_path: "/tmp"
+          # Deployment Vars
+          deployment_name: pins-opendemo-deployment
+          namespace: pins-opendemo
+          progress_deadline_seconds: 600
+          replicas: 1
+          app_name: pins-opendemo
+          service_account_name: dev-pod-sa
+          container_image: quay.io/redhat_edge_ai_industrial_demo/pins_demo:latest
+          external_host: "orin.lab.local"
+          external_port: "30000"
+          image_pull_policy: Always
+          container_name: pins-opendemo-container
+          container_port: 5000
+          run_as_group: 39
+          termination_grace_period_seconds: 30
+          # Service Vars
+          service_name: pins-opendemo-service
+          app_name: pins-opendemo
+          service_port: 5000
+          target_port: 5000
+          node_port: 30000  # Specify the desired NodePort number
+          service_type: NodePort
+      - name: Destory Application
+        job_type: run
+        inventory: Microshift Instances
+        credentials:
+          - microshift-machines
+        project: Microshift Application Deployment
+        playbook: playbooks/oc_get_all.yaml  # Name of your test playbook
+        verbosity: 1
+        execution_environment: edge.microshift  # Specify the execution environment here
+        extra_vars:
+          kubeconfig_path: "/var/lib/microshift/resources/kubeadmin/kubeconfig" #"/home/adminlocal/kubeconfig-orin"
+          output_path: "/tmp"
+          # Deployment Vars
+          deployment_name: pins-opendemo-deployment
+          namespace: pins-opendemo
+          progress_deadline_seconds: 600
+          replicas: 1
+          app_name: pins-opendemo
+          service_account_name: dev-pod-sa
+          container_image: quay.io/redhat_edge_ai_industrial_demo/pins_demo:latest
+          external_host: "orin.lab.local"
+          external_port: "30000"
+          image_pull_policy: Always
+          container_name: pins-opendemo-container
+          container_port: 5000
+          run_as_group: 39
+          termination_grace_period_seconds: 30
+          # Service Vars
+          service_name: pins-opendemo-service
+          app_name: pins-opendemo
+          service_port: 5000
+          target_port: 5000
+          node_port: 30000  # Specify the desired NodePort number
+          service_type: NodePort
   roles:
     - infra.controller_configuration.credential_types
     - infra.controller_configuration.credentials
