@@ -53,6 +53,13 @@
       become: true
       tags: install_packages
 
+    - name: pip install kubernetes and openshift
+      ansible.builtin.pip:
+        name:
+          - kubernetes
+          - openshift
+        state: present
+
     - name: Start and Enable firewalld
       service:
         name: firewalld

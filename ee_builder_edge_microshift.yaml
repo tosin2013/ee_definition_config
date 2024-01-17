@@ -47,12 +47,12 @@
               - ansible.posix
               - infra.osbuild
               - kubernetes.core
+              - redhat.openshift
               - git+https://github.com/tosin2013/edge.microshift.git
         build_steps:
           prepend_final:
             - RUN whoami
             - RUN cat /etc/os-release
-            - RUN ansible-galaxy collection install redhat.openshift
           append_final:
             - RUN echo This is a post-install command!
   roles:
