@@ -1,0 +1,12 @@
+---
+collections:
+  - name: infra.aap_utilities
+    version: "2.6.0"
+  - name: infra.aap_configuration
+    version: "3.1.0"
+  - name: kubernetes.core
+    version: "5.20"
+  - name: awx.awx
+    version: "24.6.1"
+  - name: community.general
+    version: "10.5.0" 

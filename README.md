@@ -1,67 +1,70 @@
-# ee_definition_config
-Use the EE builder using configuration Job in Controller
+# Ansible Automation Platform on OpenShift Configuration
 
-[Blog post discussing how to use this repo](https://www.redhat.com/architect/ansible-execution-environment-automated-build)
+This repository contains configuration and deployment files for setting up Ansible Automation Platform (AAP) 2.5 on OpenShift using OpenShift Data Foundation (ODF) storage.
 
-## Requirements install collections
-```bash
-ansible-galaxy collection install  -r collections/requirements.yml 
+## Documentation
+
+### User Documentation
+- [Getting Started Guide](docs/user/getting-started.md)
+- [Troubleshooting Guide](docs/user/troubleshooting.md)
+
+### Technical Documentation
+- [Technical Implementation](docs/technical/implementation.md)
+- [Security Guidelines](docs/technical/security.md)
+
+### Architecture Decision Records (ADR)
+- [ADR-0001: Use ODF for Storage](docs/adr/0001-use-odf-for-storage.md)
+- [ADR-0002: Execution Environment Builder Architecture](docs/adr/0002-execution-environment-builder-architecture.md)
+- [ADR-0003: Security Implementation Strategy](docs/adr/0003-security-implementation.md)
+- [ADR-0004: Deployment Strategy](docs/adr/0004-deployment-strategy.md)
+- [ADR-0005: Architectural Patterns and Component Organization](docs/adr/0005-architectural-patterns.md)
+- [ADR-0006: Implementation and Documentation Alignment](docs/adr/0006-implementation-alignment.md)
+- [ADR-0007: Gap Analysis and Implementation Status](docs/adr/0007-gap-analysis.md)
+- [ADR-0008: GitOps-based Post-Deployment Configuration](docs/adr/0008-post-deployment-configuration.md)
+
+### Additional Documentation
+- [System Architecture](system_architecture.txt)
+- [Technical Debt Tracking](technical_debt.txt)
+- [Dependency Analysis](dependency_analysis.txt)
+
+## Quick Start
+
+1. Configure OpenShift access:
+   ```bash
+   export KUBECONFIG=/home/student/cluster/auth/kubeconfig
+   ```
+
+2. Follow the [Getting Started Guide](docs/user/getting-started.md) for detailed setup instructions.
+
+## Repository Structure
+
+```
+.
+├── docs/
+│   ├── adr/               # Architecture Decision Records
+│   │   └── 0001-use-odf-for-storage.md
+│   ├── technical/         # Technical documentation
+│   │   ├── implementation.md
+│   │   └── security.md
+│   └── user/             # User documentation
+│       ├── getting-started.md
+│       └── troubleshooting.md
+├── gitops/              # GitOps configuration
+│   ├── base/            # Base infrastructure configuration
+│   ├── overlays/        # Environment-specific overlays
+│   └── configuration/   # AAP configuration resources
+├── manifests/           # Kubernetes/OpenShift manifests
+│   └── 02-aap.yaml
+└── system/             # System analysis and documentation
+    ├── dependency_analysis.txt
+    ├── system_architecture.txt
+    └── technical_debt.txt
 ```
 
+## Security Note
 
-## Files and purposes
+⚠️ This repository contains template files with placeholder values. Never commit actual credentials or sensitive information to version control.
 
-### Load Execution Environment
-```bash
-ansible-playbook  push_to_controller.yaml  -e "@secret-vars.yml"  -vvv
-```
-### Load Execution Environment for Ansible AWS Role
-```bash
-export USERNAME=takinosh
-export TAG=latest
-ansible-playbook push_to_controller.yaml -e "ee_name_var=ansible-aws-roles" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/ansible-aws-roles:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
-```
+## License
 
-### Configure Controller
-Configure controller to create all controller objects to create a Job template that can create an EE. 
-Changes will need to made to credentials and the inventory to be applicable to your installation.
-```bash
-ansible-playbook  configure_controller.yaml  -e "@secret-vars.yml"  -vvv
-```
-
-### Configure Controller for Microshift Deployments on AWS
-```bash
-ansible-playbook  microshift-ansible-aws-roles.yaml  -e "@secret-vars-microshift-ansible-aws-roles.yml" -e "@projects/ansible-aws-roles/microshift-ansible-aws-vars.yaml"  -vvv
-```
-
-#### No Survey
-```bash
-ansible-playbook -i inventory configure_controller_no_survey.yaml  -e "@secret-vars.yml"  -vvv
-```
-
-## Load Execution Environment for edge.microshft collection
-```bash
-export USERNAME=takinosh
-export TAG=latest
-ansible-playbook push_to_controller.yaml -e "ee_name_var=edge.microshift" -e "set_ee_registry_dest_var=quay.io/${USERNAME}/edge.microshift:${TAG}"  -e "@secret-vars-microshift-ansible-aws-roles.yml"
-```
-
-
-### EE Builder Survey
-The playbook used in the controller Job template to create an EE.
-
-### Survey Inputs
-File to copy survey inputs from to get examples of format.
-
-### EE builder base
-Base EE definition file to create an EE with a playbook.
-
-### EE Venv migrate
-Playbook that when pointed at a Tower will create Execution environments based on the Towers defined Venvs.
-
-### EE Builder local survey
-Test file for testing survey options
-
-## See Docs for more information
-* [Ansible Automation Platform Configuration](docs/configure-controller.md)
-* [Ansible Automation Platform Secret Variables](docs/secret-vars.md)
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
